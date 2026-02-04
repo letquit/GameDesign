@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "path:\"assets/\" ",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -74,7 +74,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -186,6 +187,7 @@
   },
   "active": "48ab4d9aab161722",
   "lastOpenFiles": [
+    "Pasted image 20260204220141.png",
     "assets/TheSims-AI/TheSims-AI-11.png",
     "assets/TheSims-AI/TheSims-AI-10.png",
     "assets/TheSims-AI/TheSims-AI-9.png",
@@ -196,7 +198,6 @@
     "assets/TheSims-AI/TheSims-AI-4.png",
     "assets/TheSims-AI/TheSims-AI-3.png",
     "assets/TheSims-AI/TheSims-AI-2.png",
-    "assets/TheSims-AI/TheSims-AI-1.png",
     "assets/TheSims-AI",
     "assets/新建文件夹",
     "assets",

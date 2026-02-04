@@ -1,7 +1,7 @@
 模拟市民的决策取决于一组身心需求-动机
 
 从-100~+100
-![[TheSims-AI-1.png]]
+![](assets/TheSims-AI/TheSims-AI-1.png)
 
 
 通过结合起来得到幸福度
@@ -15,39 +15,39 @@
 通过调整速率与人类正常作息相匹配，八小时睡眠和一日三餐
 
 模拟市民会自行驱动  
-![[TheSims-AI-2.png]]
+![](assets/TheSims-AI/TheSims-AI-2.png)
 
 每个物体会广播他们所能提供的数值
 
 每当市民决定做什么是会列出每件物品以及它们可以提供的数值
-![[TheSims-AI-3.png]]
+![](assets/TheSims-AI/TheSims-AI-3.png)
 
 通过当前的动机水平对广播的分数相乘来实现  
-![[TheSims-AI-4.png]]
+![](assets/TheSims-AI/TheSims-AI-4.png)
 
 睡眠良好分数低，精疲力竭分数高
 
 同时核心需求大于生活需求
 
-![[TheSims-AI-5.png]]
+![](assets/TheSims-AI/TheSims-AI-5.png)
 
 为每个需求定义独特的曲线来是吸纳理性的行为
 
-![[TheSims-AI-6.png]]
+![](assets/TheSims-AI/TheSims-AI-6.png)
 
 如冰箱分数，在吃饱时几乎为0
 
-![[TheSims-AI-7.png]]
+![](assets/TheSims-AI/TheSims-AI-7.png)
 
 然而生活需求会当模拟市民更快乐而增加
 
-![[TheSims-AI-8.png]]
+![](assets/TheSims-AI/TheSims-AI-8.png)
 
 根据市民的玩乐水平判断权衡-个性
 
 同时一些互动凌驾于一切之上，因此不会向其它来访者广播
 
-![[TheSims-AI-9.png]]
+![](assets/TheSims-AI/TheSims-AI-9.png)
 
 会随机选择得分最高的之一实现随机性
 
@@ -59,7 +59,7 @@
 
 个性->特质
 
-![[TheSims-AI-10.png]]
+![](assets/TheSims-AI/TheSims-AI-10.png)
 
 与特质相关的动机
 
@@ -87,7 +87,7 @@
 
 背景市民以低水平细节进行模拟，系统每天都会查看并评估重大生活变化-工作、恋爱、结婚（根据特质，现有关系和职业道路等因素加权）
 
-![[TheSims-AI-11.png]]
+![](assets/TheSims-AI/TheSims-AI-11.png)
 
 通过图标预测当天的需求变化
 
