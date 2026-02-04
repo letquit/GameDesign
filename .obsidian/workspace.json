@@ -11,10 +11,14 @@
             "id": "554973205e37086f",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "模拟人生的AI.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "模拟人生的AI"
             }
           }
         ]
@@ -90,6 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "模拟人生的AI.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "反向链接"
+              "title": "模拟人生的AI 的反向链接列表"
             }
           },
           {
@@ -108,11 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "模拟人生的AI.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "出链"
+              "title": "模拟人生的AI 的出链列表"
             }
           },
           {
@@ -150,12 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "模拟人生的AI.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "模拟人生的AI 的大纲"
             }
           }
         ]
@@ -177,10 +184,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "554973205e37086f",
+  "active": "1def08474349b5b9",
   "lastOpenFiles": [
-    "assets/TheSims-AI/TheSims-AI-1.png",
+    "模拟人生的AI-1.png",
+    "模拟人生的AI.png",
     "模拟人生的AI.md",
+    "assets/TheSims-AI/TheSims-AI-1.png",
     "Pasted image 20260204220141.png",
     "assets/TheSims-AI/TheSims-AI-11.png",
     "assets/TheSims-AI/TheSims-AI-10.png",
@@ -188,9 +197,6 @@
     "assets/TheSims-AI/TheSims-AI-8.png",
     "assets/TheSims-AI/TheSims-AI-7.png",
     "assets/TheSims-AI/TheSims-AI-6.png",
-    "assets/TheSims-AI/TheSims-AI-5.png",
-    "assets/TheSims-AI/TheSims-AI-4.png",
-    "assets/TheSims-AI/TheSims-AI-3.png",
     "assets/TheSims-AI",
     "assets/新建文件夹",
     "assets"
