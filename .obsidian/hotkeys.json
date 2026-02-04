@@ -1,11 +1,11 @@
 {
-  "obsidian-git:commit-smart": [
+  "paste-image-link-converter:convert-pasted-image-links": [
     {
       "modifiers": [
         "Alt",
         "Shift"
       ],
-      "key": "2"
+      "key": "1"
     }
   ],
   "obsidian-git:push2": [
@@ -14,10 +14,10 @@
         "Alt",
         "Shift"
       ],
-      "key": "3"
+      "key": "2"
     }
   ],
-  "paste-image-link-converter:convert-pasted-image-links": [
+  "obsidian-git:commit-smart": [
     {
       "modifiers": [
         "Alt",
