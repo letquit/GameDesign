@@ -1,5 +1,5 @@
 模拟市民的决策取决于一组身心需求-动机
-
+!![image-2026242515522.png](/.assets/image-2026242515522.png)
 从-100~+100
 ![](assets/TheSims-AI/TheSims-AI-1.png)
 
