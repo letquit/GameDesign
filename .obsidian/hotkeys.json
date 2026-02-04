@@ -2,9 +2,19 @@
   "obsidian-git:commit-smart": [
     {
       "modifiers": [
-        "Alt"
+        "Alt",
+        "Shift"
       ],
-      "key": "C"
+      "key": "1"
+    }
+  ],
+  "obsidian-git:push2": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "2"
     }
   ]
 }
