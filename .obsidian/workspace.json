@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "59ccb4801d37c9c5",
+        "id": "3f43bff670d516ee",
         "type": "tabs",
         "children": [
           {
-            "id": "554973205e37086f",
+            "id": "c3cbc502d6dcc0eb",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -184,21 +184,20 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "554973205e37086f",
+  "active": "c3cbc502d6dcc0eb",
   "lastOpenFiles": [
+    "assets/Pasted image 20260204222746.png",
+    "模拟人生的AI.md",
+    ".assets/image-2026242713674.png",
+    ".assets/image-202624268788.png",
     ".assets/image-2026242515522.png",
     "Pasted image 20260204222224.png.md",
-    "模拟人生的AI.md",
     "assets/模拟人生的AI.png",
     "assets/Pasted image 20260204222046.png",
     "模拟人生的AI-1.png",
     "模拟人生的AI.png",
     "assets/TheSims-AI/TheSims-AI-1.png",
     "Pasted image 20260204220141.png",
-    "assets/TheSims-AI/TheSims-AI-11.png",
-    "assets/TheSims-AI/TheSims-AI-10.png",
-    "assets/TheSims-AI/TheSims-AI-9.png",
-    "assets/TheSims-AI/TheSims-AI-8.png",
     "assets/TheSims-AI",
     "assets/新建文件夹",
     "assets"
