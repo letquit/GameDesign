@@ -1,0 +1,10 @@
+{
+  "id": "paste-image-link-converter",
+  "name": "Paste Image Link Converter",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Convert Obsidian pasted image wiki links to standard Markdown links with assets path.",
+  "author": "letquit",
+  "authorUrl": "",
+  "isDesktopOnly": false
+}

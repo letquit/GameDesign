@@ -5,7 +5,7 @@
         "Alt",
         "Shift"
       ],
-      "key": "1"
+      "key": "2"
     }
   ],
   "obsidian-git:push2": [
@@ -14,7 +14,16 @@
         "Alt",
         "Shift"
       ],
-      "key": "2"
+      "key": "3"
+    }
+  ],
+  "paste-image-link-converter:convert-pasted-image-links": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "1"
     }
   ]
 }
