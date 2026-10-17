@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "240574f3631de86d",
+        "id": "29944592401e985f",
         "type": "tabs",
         "children": [
           {
-            "id": "80fba1bf59a6dad4",
+            "id": "5eaf8251ab304810",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -187,12 +187,18 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "80fba1bf59a6dad4",
+  "active": "5eaf8251ab304810",
   "lastOpenFiles": [
+    "assets/2D 美术风格/2D 美术风格-5.png",
+    "zz-remote-selftest.md",
+    "assets/zz-remote-selftest/zz-remote-selftest-2.png",
+    "assets/zz-remote-selftest/zz-remote-selftest-1.png",
+    "assets/zz-remote-selftest",
+    "2D 美术风格.md",
+    "assets/2D 美术风格/2D 美术风格-4.png",
     "assets/2D 美术风格/2D 美术风格-3.png",
     "未命名.canvas",
     "未命名 1.canvas",
-    "2D 美术风格.md",
     "Climbing In Games.md",
     "The Challenge of Cameras.md",
     "未命名",
@@ -202,10 +208,6 @@
     "assets/20260210221738.png",
     "assets/20260210221659.png",
     "assets/20260210221625.png",
-    "assets/20260210221515.png",
-    "assets/20260210221318.png",
-    "assets/20260210221207.png",
-    "assets/20260210220434.png",
     "Interrogation Mechanics.md",
     "Detective Game Mechanics.md",
     "Game Guidance Mechanism.md",

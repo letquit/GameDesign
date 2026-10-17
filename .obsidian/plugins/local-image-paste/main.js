@@ -175,7 +175,7 @@ function remoteImageRefFromText(text) {
 	}
 
 	const bare = trimmed.match(/^(https?:\/\/\S+)$/i);
-	if (bare && extensionFromUrl(bare[1])) {
+	if (bare && looksLikeImageUrl(bare[1])) {
 		return { url: bare[1], alt: '', fallback: raw };
 	}
 
@@ -189,6 +189,62 @@ function remoteImageRef(text, html) {
 	const source = singleImageSrcFromHtml(html);
 	if (!source) return null;
 	return { url: source, alt: '', fallback: `![](${source})` };
+}
+
+/**
+ * Many image CDNs (Feishu `asynccode`, Google avatars, CDN proxies) serve
+ * images from URLs without a file extension, so a missing extension is not
+ * evidence that the link is not an image.
+ */
+function looksLikeImageUrl(url) {
+	const value = String(url == null ? '' : url);
+	if (!/^https?:\/\//i.test(value)) return false;
+	if (extensionFromUrl(value)) return true;
+	return /(?:^|[\/._-])(?:image|images|img|imgproxy|photo|photos|picture|avatar|media|thumbnail|thumb|asynccode|download|file)(?:[\/._?=&-]|$)/i
+		.test(value.replace(/^https?:\/\//i, ''));
+}
+
+function remoteImagePattern() {
+	return /!\[([^\]]*)\]\(\s*<?(https?:\/\/[^\s)>]+)>?\s*\)/g;
+}
+
+/** True when the text Obsidian inserted is one remote image (markdown or a bare URL). */
+function isRemoteImageText(text) {
+	const value = String(text == null ? '' : text);
+	if (!value.trim()) return false;
+	if (remoteImagePattern().test(value)) return true;
+	const bare = value.trim().match(/^<?(https?:\/\/\S+?)>?$/i);
+	return Boolean(bare && looksLikeImageUrl(bare[1]));
+}
+
+/** Cheap pre-check so only image-ish pastes pay for a content snapshot. */
+function clipboardMayHoldRemoteImage(text, html) {
+	if (/<img\b/i.test(String(html || ''))) return true;
+	const trimmed = String(text == null ? '' : text).trim();
+	if (!trimmed) return false;
+	if (remoteImagePattern().test(trimmed)) return true;
+	const bare = trimmed.match(/^<?(https?:\/\/\S+?)>?$/i);
+	return Boolean(bare && looksLikeImageUrl(bare[1]));
+}
+
+/** Locates the text a paste added: common prefix/suffix of before and after. */
+function insertedRegion(before, after) {
+	const oldText = String(before == null ? '' : before);
+	const newText = String(after == null ? '' : after);
+	const max = Math.min(oldText.length, newText.length);
+	let start = 0;
+	while (start < max && oldText.charCodeAt(start) === newText.charCodeAt(start)) start += 1;
+	let tailOld = oldText.length;
+	let tailNew = newText.length;
+	while (
+		tailOld > start
+		&& tailNew > start
+		&& oldText.charCodeAt(tailOld - 1) === newText.charCodeAt(tailNew - 1)
+	) {
+		tailOld -= 1;
+		tailNew -= 1;
+	}
+	return { start, end: tailNew, inserted: newText.slice(start, tailNew) };
 }
 
 function escapeRegExp(value) {
@@ -316,11 +372,120 @@ class LocalImagePastePlugin extends Plugin {
 
 		const text = readClipboardText(clipboardData, 'text/plain');
 		const html = readClipboardText(clipboardData, 'text/html');
-		const ref = remoteImageRef(text, html);
-		if (!ref) return;
+		if (!clipboardMayHoldRemoteImage(text, html)) return;
 
-		evt.preventDefault();
-		this.enqueue(() => this.downloadRemoteImage(editor, noteFile, ref));
+		// Clipboard shapes vary wildly per site (markdown, bare URL, rich HTML,
+		// or several of them at once), so do not try to insert anything
+		// ourselves: let Obsidian paste natively, then rewrite whatever landed
+		// in the editor into a local asset.
+		const snapshot = editor.getValue();
+		this.watchPastedRegion(editor, noteFile, snapshot, remoteImageRef(text, html));
+	}
+
+	/**
+	 * Waits for Obsidian to finish its own paste, finds the inserted text and
+	 * replaces remote image links inside it. Retries briefly because the native
+	 * paste can land a few frames after the `editor-paste` event.
+	 */
+	watchPastedRegion(editor, noteFile, snapshot, fallback, attempt) {
+		const tries = typeof attempt === 'number' ? attempt : 6;
+		const timer = setTimeout(() => {
+			let current;
+			try {
+				current = editor.getValue();
+			} catch (err) {
+				return;
+			}
+			const region = insertedRegion(snapshot, current);
+
+			if (!region.inserted.trim()) {
+				if (tries > 0) {
+					this.watchPastedRegion(editor, noteFile, snapshot, fallback, tries - 1);
+				} else if (fallback) {
+					this.enqueue(() => this.downloadRemoteImage(editor, noteFile, fallback));
+				}
+				return;
+			}
+
+			if (!isRemoteImageText(region.inserted)) return;
+
+			this.enqueue(async () => {
+				const result = await this.localizeText(region.inserted, noteFile, { notify: true });
+				if (result.text === region.inserted) return;
+				if (typeof editor.offsetToPos !== 'function') return;
+
+				// The download may take a moment; only rewrite when the pasted
+				// region is still exactly where it was, otherwise locate it again
+				// by content and give up if it is ambiguous.
+				const latest = editor.getValue();
+				let start = region.start;
+				let end = region.end;
+				if (latest.slice(start, end) !== region.inserted) {
+					const first = latest.indexOf(region.inserted);
+					if (first < 0 || latest.indexOf(region.inserted, first + 1) >= 0) return;
+					start = first;
+					end = first + region.inserted.length;
+				}
+				editor.replaceRange(result.text, editor.offsetToPos(start), editor.offsetToPos(end));
+			});
+		}, 45);
+		this.register(() => clearTimeout(timer));
+	}
+
+	/**
+	 * Replaces every remote image reference in `text` with a local asset link.
+	 * Unreachable images keep their original link, so nothing is ever lost.
+	 */
+	async localizeText(text, noteFile, options) {
+		const opts = options || {};
+		const source = String(text == null ? '' : text);
+		const items = [];
+		const pattern = remoteImagePattern();
+		let match;
+		while ((match = pattern.exec(source)) !== null) {
+			items.push({ index: match.index, length: match[0].length, alt: match[1], url: match[2] });
+		}
+
+		let bareMode = false;
+		if (items.length === 0) {
+			const bare = source.trim().match(/^<?(https?:\/\/\S+?)>?$/i);
+			if (bare && looksLikeImageUrl(bare[1])) {
+				bareMode = true;
+				items.push({ index: 0, length: source.length, alt: '', url: bare[1] });
+			}
+		}
+		if (items.length === 0) return { text: source, replaced: 0, failed: [] };
+
+		const pieces = [];
+		let cursor = 0;
+		let replaced = 0;
+		const failed = [];
+		let lastError = null;
+
+		for (let i = 0; i < items.length; i += 1) {
+			const item = items[i];
+			pieces.push(source.slice(cursor, item.index));
+			cursor = item.index + item.length;
+			try {
+				const downloaded = await fetchRemoteImage(item.url);
+				const vaultPath = await this.writeImage(downloaded.bytes, downloaded.ext, noteFile);
+				pieces.push(this.markdownFor(vaultPath, noteFile, item.alt));
+				replaced += 1;
+			} catch (err) {
+				console.error('[local-image-paste] could not localize ' + item.url, err);
+				failed.push(item.url);
+				lastError = err;
+				pieces.push(bareMode ? source : '![' + item.alt + '](' + item.url + ')');
+			}
+		}
+		pieces.push(source.slice(cursor));
+
+		if (opts.notify && replaced === 0 && failed.length > 0) {
+			new Notice('Could not download the pasted image ('
+				+ (lastError && lastError.message ? lastError.message : 'request failed')
+				+ '); kept the original link.');
+		}
+		return { text: pieces.join(''), replaced, failed };
 	}
 
 	/* ---------------------------- work queue ----------------------------- */
@@ -466,57 +631,29 @@ class LocalImagePastePlugin extends Plugin {
 		const noteFile = view.file;
 		const content = editor.getValue();
 
-		const pattern = /!\[([^\]]*)\]\(\s*<?(https?:\/\/[^\s)>]+)>?\s*\)/g;
 		const found = [];
+		const pattern = remoteImagePattern();
 		let match;
-		while ((match = pattern.exec(content)) !== null) {
-			found.push({
-				index: match.index,
-				length: match[0].length,
-				alt: match[1],
-				url: match[2],
-			});
-		}
+		while ((match = pattern.exec(content)) !== null) found.push(match[2]);
 		if (found.length === 0) {
 			new Notice('No remote images found in this note.');
 			return;
 		}
 
 		const progress = new Notice('Downloading ' + found.length + ' image(s)…', 0);
-		const pieces = [];
-		let cursor = 0;
-		let replaced = 0;
-		const failed = [];
-
 		try {
-			for (let i = 0; i < found.length; i += 1) {
-				const item = found[i];
-				pieces.push(content.slice(cursor, item.index));
-				cursor = item.index + item.length;
-				try {
-					const downloaded = await fetchRemoteImage(item.url);
-					const vaultPath = await this.writeImage(downloaded.bytes, downloaded.ext, noteFile);
-					pieces.push(this.markdownFor(vaultPath, noteFile, item.alt));
-					replaced += 1;
-				} catch (err) {
-					console.error('[local-image-paste] could not localize ' + item.url, err);
-					failed.push(item.url);
-					pieces.push('![' + item.alt + '](' + item.url + ')');
-				}
-			}
-			pieces.push(content.slice(cursor));
-
-			if (replaced > 0) {
+			const result = await this.localizeText(content, noteFile);
+			if (result.replaced > 0) {
 				const lastLine = editor.lastLine();
 				editor.replaceRange(
-					pieces.join(''),
+					result.text,
 					{ line: 0, ch: 0 },
 					{ line: lastLine, ch: editor.getLine(lastLine).length },
 				);
 			}
 			new Notice(
-				'Localized ' + replaced + ' image(s)'
-				+ (failed.length > 0 ? ', ' + failed.length + ' failed' : '') + '.',
+				'Localized ' + result.replaced + ' image(s)'
+				+ (result.failed.length > 0 ? ', ' + result.failed.length + ' failed' : '') + '.',
 			);
 		} finally {
 			if (progress && typeof progress.hide === 'function') progress.hide();
@@ -590,4 +727,8 @@ module.exports.__internals = {
 	singleImageSrcFromHtml: singleImageSrcFromHtml,
 	collectClipboardImages: collectClipboardImages,
 	fetchRemoteImage: fetchRemoteImage,
+	looksLikeImageUrl: looksLikeImageUrl,
+	isRemoteImageText: isRemoteImageText,
+	clipboardMayHoldRemoteImage: clipboardMayHoldRemoteImage,
+	insertedRegion: insertedRegion,
 };
