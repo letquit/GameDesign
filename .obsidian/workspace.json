@@ -68,7 +68,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "文件列表"
@@ -185,10 +187,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "80fba1bf59a6dad4",
+  "active": "860e852ca2a8a9a0",
   "lastOpenFiles": [
-    "Climbing In Games.md",
+    "未命名.canvas",
+    "未命名 1.canvas",
     "2D 美术风格.md",
+    "Climbing In Games.md",
     "The Challenge of Cameras.md",
     "未命名",
     "assets/20260210221954.png",
