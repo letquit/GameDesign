@@ -1,0 +1,9 @@
+{
+	"id": "local-image-paste",
+	"name": "Local Image Paste",
+	"version": "1.0.0",
+	"minAppVersion": "1.4.0",
+	"description": "Save pasted images (screenshots, clipboard pictures and web image URLs) to assets/<note-name>/ and insert GitHub-friendly relative links.",
+	"author": "local",
+	"isDesktopOnly": false
+}
